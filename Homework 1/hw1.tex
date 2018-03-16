@@ -1,0 +1,99 @@
+%%%%%%%%%% DOCUMENT STUFF %%%%%%%%%%
+
+\documentclass[10.5pt,letterpaper]{article}
+\usepackage{mathtools}
+\usepackage{amsmath}
+\usepackage{amssymb}
+\usepackage{datetime}
+\usepackage{setspace}
+\usepackage{tkz-graph}
+\usepackage[margin=1in]{geometry}
+\usepackage{courier}
+\usepackage{listings}
+\usepackage{mips}
+\usepackage{graphicx}
+
+%%%%%%%%%% FORMATTING %%%%%%%%%%
+
+\newdate{date}{10}{04}{2017}
+\spacing{1.5}
+\date{\displaydate{date}}
+\setcounter{secnumdepth}{0}
+\newcommand\tab[1][0.5cm]{\hspace*{#1}}
+\newcommand*\circled[1]{\tikz[baseline=(char.base)]{
+            \node[shape=circle,draw,inner sep=2pt] (char) {#1};}}
+\lstset{language=[mips]Assembler}
+\graphicspath{{images/}}
+
+%%%%%%%%%% CONTENT %%%%%%%%%%
+
+%%%%% COVER PAGE %%%%%
+
+\begin{document}
+\title{CS 112: Homework 1}
+\author{
+	Jonathan Woong\\
+	804205763\\
+	Spring 2017\\
+	Discussion 1A}
+\maketitle
+\pagebreak
+
+%%%%% COMBINATORICS %%%%%
+
+\section{Combinatorics}
+\textbf{Problem 1.} How many different teams including 3 boys and 4 girls can you form from a group of 10 boys and 12 girls?
+\[{{10}\choose{3}}{{12}\choose{4}} = 59400\]
+\textbf{Problem 2.} There are 9 people standing in a line. If both Joe and Linda should neither be the first one nor the last one, how many valid ways are there to line them up?
+\[7!{{7}\choose{2}}2!=211680\]
+\textbf{Problem 3.} A computer is sending the following 16 bits message to another computer via a network: `0101 1101 0111 1011'. However, because of a network problem the bits of the message are shuffled while in transmission before reaching the receiver side. How many unique possible messages might the receiver get?
+\[{{16}\choose{5}} = 4368\]
+\textbf{Problem 4.} In how many ways can 15 people be seated around two round tables with seating capacity of 7 and 8 people?
+\[{{15}\choose{8}}6!7! = 23351328000\]
+\textbf{Problem 5.} A robot is standinf at the upper left corner of a maze. The maze is organized as a grid of $n$ rows and $m$ columns such that the upper left corner is at position (0,0) and the bottom right corner is at $(n,m)$. Starting from its position at the upper left corner, at each step the robot can only move either one step to its right or one step to its bottom. How many different paths are there that the robot can make to reach the bottom right corner $(n,m)$?
+\[{{m+n-2}\choose{n-1}}\]
+\pagebreak
+
+%%%%% Z & LAPLACE TRANSFORM %%%%%
+
+\section{Z-Transform and Laplace Transform}
+\textbf{Problem 6.} Find the Z-Transform of the following:\\
+$a) x(n) = \frac{1}{2}^n, n\geq 0$\\
+\[F(z) = \sum_{n=0}^{\infty}\frac{1}{2}^{n}z^{-n} = \frac{1}{1-\frac{1}{2}z^{-1}}\]
+$b) x(n) = \frac{1}{2}^n + \frac{1}{3}^{-n}, n\geq 0$\\
+\[F(z) = \sum_{n=0}^{\infty}\bigg[\frac{1}{2}^n + \frac{1}{3}^{-n}\bigg]z^{-n} = \frac{4z^2 - 7z}{(2z-1)(z-3)}\]
+$c) x(n) = n, n \geq 0$
+\[\sum_{n=0}^{\infty}z^{-n} = \frac{1}{1-z^{-1}}\]
+\[\frac{d\sum_{n=0}^{\infty}(z^{-1})^n}{d(z^{-1})} = \frac{d\frac{1}{1-z^{-1}}}{d(z^{-1})}\]
+\[\sum_{n=0}^{n}n(z^{-1})^{n-1} = \frac{z^2}{(z-1)^2}\]
+\[F(z)=\sum_{n=0}^{\infty}nz^{-n} = \frac{z}{(z-1)^2}\]
+$d) x(n)=\frac{1}{n}, n \geq 1$
+\[F(z) = \sum_{n=1}^{\infty}\frac{1}{n}z^{-n}\]
+\[\frac{dF(z)}{dz} = \sum_{n=1}^{\infty}\frac{1}{n}(-n)z^{-n-1} = \frac{1}{z-z^2}\]
+\[F(z) = \ln z - (1-z) = \ln\bigg(\frac{z}{1-z}\bigg)\]
+\textbf{Problem 7.} Find the Laplace Transform of:\\
+$a) f(x) = e^{-x} + e^x$
+\[F^*(s) = \int_{0}^{\infty}(e^{-x}+e^x)e^{-sx}dx = \int_{0}^{\infty}e^{-(s+1)x}dx + \int_{0}^{\infty}e^{(1-s)x}dx = \frac{2s}{s^2 -1}\]
+$b) f(x) = e^{ax}$
+\[F^*(s) = \int_{0}^{\infty}e^{ax}e^{-sx}dx = \int_{0}^{\infty}e^{-(s-a)x}dx = \bigg[\frac{e^{-(s-a)t}}{-(s-a)}\bigg]_{0}^{\infty} = \frac{1}{s-a}\]
+$c) f(x) = x^2$
+\[F^*(s) = \int_{0}^{\infty}x^2 e^{-sx}dx = -\frac{1}{s}\int_{0}^{\infty}x^2de^{-sx} = -\frac{1}{s}\bigg(\big[x^2e^{-sx}\big]_{0}^{\infty} - \int_{0}^{\infty}2xe^{-sx}dx\bigg)\]
+\[=\frac{2}{s}\int_{0}^{\infty}xe^{-sx}dx = \frac{2}{s}\bigg(-\frac{1}{s}\bigg)\int_{0}^{\infty}xde^{-sx} = -\frac{2}{s^2}\bigg(\big[xe^{-sx}\big]_{0}^{\infty} - \int_{0}^{\infty}e^{-sx}dx\bigg) = -\frac{2}{s^2}\frac{1}{s} = -\frac{2}{s^3}\]
+$d) f(x) = 4x^2 -3x + 7$
+\[F^*(s)=\int_{0}^{\infty}4x^2e^{-sx}dx-\int_{0}^{\infty}3xe^{-sx}dx + \int_{0}^{\infty}7e^{-sx}dx\]
+\[f(x)=x^2 \leftrightarrow F^*(s)=-\frac{2}{s^3}\]
+\[\int_{0}^{\infty}xe^{-sx}dx = -\frac{1}{s}\int_{0}^{\infty}xde^{sx} = -\frac{1}{s}\bigg(0-\int_{0}^{\infty}e^{-sx}dx\bigg) = -\frac{1}{s^2}\]
+\[\int_{0}^{\infty}e^{-sx}dx = -\frac{1}{s}\]
+\[F^*(s) = \int_{0}^{\infty}4x^2e^{-sx}dx - \int_{0}^{\infty}3xe^{-sx}dx + \int_{0}^{\infty}7e^{-sx}dx = -\frac{8}{s^3} + \frac{3}{s^2} - \frac{7}{s}\]
+\textbf{Problem 8.} Solve the following differential equations using Laplace Transform:\\
+\[x(t) = \frac{dx(t)}{dt} + 2\frac{d^2x(t)}{dt^2}\]
+\[x(0)=1\]
+\[x'(0)=\frac{1}{2}\]\\
+If $L\{x(t)\} = X(s)$:\\
+\[L\{x'(t)\} = sX(s)-x(0)\]
+\[L\{x''(t)\} = s^2X(s)-sx(0)-x'(0)\]
+\[X(s)=sX(s)-x(0)+2\big[s^2X(s)-sx(0)-x'(0)\big] = sX(s)-1+2\big[s^2X(s)-s-\frac{1}{2}\big]=\frac{2s+2}{2s^2+s-1}=\frac{2(s+1)}{(2s-1)(s+1)}=\frac{1}{s-\frac{1}{2}}\]
+\[x(t)=e^{\frac{1}{2}t}\]
+
+\pagebreak
+\end{document}

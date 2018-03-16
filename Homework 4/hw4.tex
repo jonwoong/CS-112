@@ -1,0 +1,121 @@
+%%%%%%%%%% DOCUMENT STUFF %%%%%%%%%%
+
+\documentclass[10.5pt,letterpaper]{article}
+\usepackage{mathtools}
+\usepackage{amsmath}
+\usepackage{amssymb}
+\usepackage{datetime}
+\usepackage{setspace}
+\usepackage{tikz}
+\usepackage[margin=1in]{geometry}
+\usepackage{courier}
+\usepackage{listings}
+\usepackage{mips}
+\usepackage{graphicx}
+\usepackage{enumitem}
+\usepackage{pgfplots}
+
+%%%%%%%%%% FORMATTING %%%%%%%%%%
+
+\newdate{date}{8}{05}{2017}
+\spacing{1.5}
+\date{\displaydate{date}}
+\setcounter{secnumdepth}{0}
+\newcommand\tab[1][0.5cm]{\hspace*{#1}}
+\newcommand*\circled[1]{\tikz[baseline=(char.base)]{
+            \node[shape=circle,draw,inner sep=2pt] (char) {#1};}}
+\lstset{language=[mips]Assembler}
+
+%%%%%%%%%% CONTENT %%%%%%%%%%
+
+%%%%% COVER PAGE %%%%%
+
+\begin{document}
+\title{CS 112: Homework 4}
+\author{
+	Jonathan Woong\\
+	804205763\\
+	Spring 2017\\
+	Discussion 1A}
+\maketitle
+\pagebreak
+
+%%%%% CONTINUOUS RANDOM VARIABLES %%%%%
+
+\section{Continuous Random Variables}
+\begin{enumerate}[label=\textbf{Problem \arabic*.}]
+\item The packets are sent from a server to a client host. The client host notices that the time interval of two consecutive packets is uniformly distributed between 10 ms to 20 ms.
+	\begin{enumerate}[label=\alph*)]
+	\item Suppose one packet just arrived. What is the probability that the next packet arrives within 14 ms?
+	\[P(x\leq 14)=0.4\]
+	\item After the previous packet has arrived, no packet comes for 14 ms. What is the probability that a packet arrives in the next 3 ms?
+	\[P(x\leq 17 | x \geq 14) = \frac{0.3}{0.6} = 0.5 \]
+	\end{enumerate}
+\item A computer system consists of $n$ subsystems, each of which has an exponential distribution lifetime with parameter $\lambda_i,i=1,\dots,n.$ Each subsystem is independent but the whole computer system fails if any of the subsystems do. Find the distribution of system lifetime.\\
+Let $X_i$ be a random variable that denotes the lifetime of the $i^{th}$ component.\\
+Let $Y = $ min$(X_1,\dots,X_n)$
+\[P(Y < y) = 1 - P(X_1 > y \cap \dots \cap X_n > y) = 1 - \prod_{i=1}^{n}P(X_i>y)\]
+\[P(X_i<x)=F(x)=
+\begin{cases}
+1-e^{-\lambda x} & x \leq 0 \\
+0 & x < 0
+\end{cases}\]
+\[F(Y)=P(Y<y)=1-\prod_{i=1}^{n}e^{-\lambda_i y}\]
+\item Jobs arriving to a computer system have been found to require CPU time that can be modeled by an exponential distribution with parameter $\frac{1}{140}$ per millisecond. The CPU scheduling discipline is  quantum-oriented so that a job not completing within a quantum of 100 milliseconds will be routed back to the tail of the queue of waiting jobs. Find the probability that an arriving job will be forced to wait for a second quantum. Also, find the probability that an arriving job will require a second quantum given that it has been served for 50 milliseconds already.
+\[P[\text{job waits for $2^{nd}$ quantum}]=P(x\geq 100)=1-\sum_{k=1}^{99}\frac{1}{140}\bigg(1-\frac{1}{140}\bigg)^{k-1}\]
+\[P(X\geq 100|X>50)=P(X\geq 50)=1-\sum_{k=1}^{49}\frac{1}{140}\bigg(1-\frac{1}{140}\bigg)^{k-1}\]
+\item Let $X_1,\dots,X_n$ be independent random variables, each having a uniform distribution over (0,1). Let $M = $ maximum$(X_1,\dots,X_n)$.
+	\begin{itemize}
+		\item Show that the distribution function of $M,F_M(x),$ is given by \[F_M(x)=x^n, 0 \leq x \leq 1\]
+		\[P(M\leq x) = P(max(X_1,\dots,X_n)\leq x) = P(X_1 \leq x, \dots, X_n \leq x) = \prod_{i=1}^{n}P(X_i \leq x) = x^n\]
+		\item What is the probability density function of $M$?
+		\[f_M(x) = \frac{d}{dx}P(M < x) = nx^{n-1}\]
+	\end{itemize}
+\item Consider a triangle and a point chosen with the triangle according to a uniform probability distribution. Let $X$ be the distance between the point and the base of the triangle. Given the height $h$ and base $b$ of the triangle, find the CDF and PDF of $X$.
+\[F_X(x)=P(X\leq x)=\frac{\frac{x}{2}\bigg(b + \frac{b(h-x)}{x}\bigg)}{\frac{bh}{2}} = \frac{x\bigg(1+\frac{h-x}{h}\bigg)}{h} = \frac{x}{h}\bigg(2-\frac{x}{h}\bigg)\]
+\[f_X(x)=\frac{d}{dx}\frac{x}{h}\bigg(2-\frac{x}{h}\bigg)=\frac{2}{h}-\frac{2x}{h^2} \tab 0 < x < h\]
+
+%%%%% EXPECTATION AND VARIANCE %%%%%
+
+\section{Expectation and Variance}
+\item A given program has an execution time that is uniformly distributed between 10 and 20 seconds. The number of interrupts that occur during execution is a Poisson random variable with parameter $\lambda t$ where $t$ is the program execution time. The probability distribution of the number of interrupts is therefore $P(N=k)=\frac{(\lambda t)^ke^{-\lambda t}}{k!}$.
+	\begin{enumerate}[label=(\alph*)]
+	\item What is $E[N|T=t]$, where $N$ is the number of interrupts the program experiences, and $T$ is the running time of the program.
+	\[E[N|T=t]=\lambda t\]
+	\item Find the expected number of interrupts the program experiences during a randomly selected execution.
+	\[E[N]=\int_{10}^{20}E[N|T=t]f_T(t)dt = \int_{10}^{20}\lambda t\frac{1}{10}dt=15\lambda\]
+	\end{enumerate}
+\item In a particular computer storage system, information is retrieved by entering the system at a random point and systematically checking through all the items in the system at a uniform speed. Suppose it takes $a$ seconds to start the search, and it takes $b$ seconds to run through the entire system. Consider the random variable $T$ that denotes the required time to reach any given item of information.
+	\begin{enumerate}[label=(\alph*)]
+	\item Find the PDF of $T$.
+	\[p_T(t) = 
+	\begin{cases}
+	\frac{1}{b} & a \leq t \leq a + b \\
+	0 & \text{otherwise}
+	\end{cases}\]
+	\item Show that the mean time to reach a given item is given by $a+\frac{b}{2}$
+	\[E[T]=\int_{a}^{a+b}tp_T(t)dt=\frac{1}{b}\int_a^{a+b}tdt=a+\frac{b}{2}\]
+	\item What is the variance of $T$?
+	\[var(T)=E(T^2)-E(T)^2 = \int_a^{a+b}t^2p_T(t)dt-\bigg(a+\frac{b}{2}\bigg)^2=\frac{b}{12}\]
+	\end{enumerate}
+\item A given program has an execution time that is uniformly distributed between 10 and 20 seconds. The number of interrupts that occur during execution is a Poisson random variable with parameter $\lambda t$ where $t$ is the program execution time. Find the expected number of interrupts the program experiences during a randomly selected execution.
+\[f(t)=\frac{1}{20-10}\]
+\[E[N]=\int_{10}^{20}E[N|T=t]f_T(t)dt = \int_{10}^{20}\lambda t\frac{1}{10}dt=15\lambda\]
+\item Suppose that you made a webpage and you are collecting the statistics from the visitors. There are $m$ types of visitors (students, company recruiters, etc.). Each visit is equally likely to be any of the $m$ types, independent of the types of previous visitors. Find the expected number of visitors needed in order to have at least one of each type. Let $X$ denote the number of visitors needed. Represent $X$ by \[X=\sum_{i=1}^{m}X_i\] where each $X_i$ is a geometric random variable.
+Let $i$ be the number of current different types.\\
+Let $X_i$ be the number of additional visitors needed until the webpage contains $i+1$ types. The $X_i$ are independent geometric random variables with parameter $\frac{n-i}{n}$ for $i=0,\dots,n-1$.
+\[E[X]=E\bigg[\sum_{i=1}^{m}X_i\bigg]=\sum_{i=1}^{m}E[X_i]=\sum_{i=1}^{m}\frac{n}{n-i}\]
+\item A computing server is up and running for a limited time period. It starts running at time that is uniformly distributed between 9 a.m. and 1 p.m. After starting, it executes a single task and shuts off after finishing it. The duration of the task is exponentially distributed with parameter $\lambda(y)=\frac{1}{300-y}$, where $y$ is the length of the time interval (in minutes) between 9 a.m. and the time at which the server started running.
+	\begin{enumerate}[label=\alph*)]
+	\item What is the expected amount of time the server will be busy running the task?
+	\[f(y)=\frac{1}{240}\]
+	\[E[y]=\int_{0}^{240}y\lambda(y)dy = \int_{0}^{240}\frac{y}{300-y}dy=60(ln(3125-)4)\]
+	\item What is the expected time at which the server will be turned off?
+	\[\int_{0}^{240}yf(y)dy + E[y] = \int_{0}^{240}\frac{y}{240}dy + E[y] = 120 + E[y] = 120 + 60(ln(3125)-4)\]
+	\end{enumerate}
+\item A rat is trapped in a maze. Initially it has to choose one of two directions. If it goes to the right, then it will wander around in the maze for three minutes and will then return to its initial position. If it goes to the left, then with probability $\frac{1}{3}$ it will depart the mamze after two minutes of traveling, and with probability $\frac{2}{3}$ it will return to its initial position after five minutes of traveling. Assuming that the rat is at all times equally likely to go to the left or the right, what is the expected number of minutes that it will be trapped in the maze?
+\[E[T]=\frac{1}{2}(3+E[T])+\frac{1}{2}\bigg[2\bigg(\frac{1}{3}\bigg)+\frac{2}{3}(E[T]+5)\bigg] = 21\]
+\end{enumerate}
+
+
+\end{document}

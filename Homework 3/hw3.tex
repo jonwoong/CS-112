@@ -1,0 +1,164 @@
+%%%%%%%%%% DOCUMENT STUFF %%%%%%%%%%
+
+\documentclass[10.5pt,letterpaper]{article}
+\usepackage{mathtools}
+\usepackage{amsmath}
+\usepackage{amssymb}
+\usepackage{datetime}
+\usepackage{setspace}
+\usepackage{tikz}
+\usepackage[margin=1in]{geometry}
+\usepackage{courier}
+\usepackage{listings}
+\usepackage{mips}
+\usepackage{graphicx}
+\usepackage{enumitem}
+\usepackage{pgfplots}
+
+%%%%%%%%%% FORMATTING %%%%%%%%%%
+
+\newdate{date}{21}{04}{2017}
+\spacing{1.5}
+\date{\displaydate{date}}
+\setcounter{secnumdepth}{0}
+\newcommand\tab[1][0.5cm]{\hspace*{#1}}
+\newcommand*\circled[1]{\tikz[baseline=(char.base)]{
+            \node[shape=circle,draw,inner sep=2pt] (char) {#1};}}
+\lstset{language=[mips]Assembler}
+\graphicspath{{images/}}
+\def \A{(-0.75,0) circle (1)}
+\def \B{(0.75,0) circle (1)}
+\def \C{(0,1.25) circle (1)}
+\def \R{(-2.5,-1.5) rectangle (2.5,2.5)}
+\usepgfplotslibrary{fillbetween}
+
+%%%%%%%%%% CONTENT %%%%%%%%%%
+
+%%%%% COVER PAGE %%%%%
+
+\begin{document}
+\title{CS 112: Homework 3}
+\author{
+	Jonathan Woong\\
+	804205763\\
+	Spring 2017\\
+	Discussion 1A}
+\maketitle
+\pagebreak
+
+%%%%% DISCRETE RANDOM VARIABLES %%%%%
+
+\section{Discrete Random Variables}
+\begin{enumerate}[label=\textbf{Problem \arabic*.}]
+\item The packets are sent from a server to a client host. The client host notices that the time interval of two consecutive packets is uniformly distributed between 10 ms to 20 ms.
+	\begin{enumerate}[label=\alph*)]
+	\item Suppose one packet just arrived. What is the probability that the next packet arrives within 14 ms?
+	\[P(x\leq 14)=0.4\]
+	\item After the previous packet has arrived, no packet comes for 14 ms. What is the probability that a packet arrives in the next 3 ms?
+	\[P(x\leq 17 | x \geq 14) = \frac{0.3}{0.6} = 0.5 \]
+	\end{enumerate}
+\item A router performs different types of forwarding services for 6 different types of application flows. Each type of application has the same chance of arriving at the router. Now there are four flows arrived and waiting to be served. Let $X$ be the number of video stream flows and $Y$ be the number of FTP file transfer flows. What is the joined PMF of $X$ and $Y$?
+\[P_{XY}(x,y)=\frac{4!}{x!y!}\bigg(\frac{1}{6}\bigg)^x\bigg(\frac{1}{6}\bigg)^y\]
+\item Consider a communications network where each packet travels over 2 different subnetworks to get from one computer to another. In each subnetwork the packet can take 1, 2, 3, 4, or 5 hops, where each of the 5 possibilities is equally likely. The number of hops in one network does not depend in any way on the number of hops taken in the other network (i.e., they are independent). Let $X$ be the random variable corresponding to the total number of hops taken by a packet.
+	\begin{enumerate}[label=\alph*)]
+	\item What is the PMF of $X$?
+	\[P_X(x)=\frac{1}{5}^2\]
+	\item Say each hop causes a delay of 1 millisecond. What is the expected delay (in milliseconds) for a packet in traversing the two sub-networks?
+	\[E[X]=\sum_{x}xP_X(x)=0.76\]
+	\end{enumerate}
+\item An internet server has 13 clients (client $A$, client $B$, $\dots$, client $M$), and each has 4 requests waiting to be responded. So there are a total of 52 requests in the queue. Each time the server picks a request to respond. Calculate the probability that the 13th request served is the first one from client F.
+\[\prod_{k=0}^{k<12}\frac{48-k}{52-k}\frac{4}{52-12}\]
+\item Jobs arriving to a computer system have been found to require CPU time that can be modeled by a geometric distribution where the CPU time is divided into millisecond slots and the proability of a job to finish any millisecond slot $= \frac{1}{140}$. The CPU scheduling discipline is quantum-oriented so that a job not completing within a quantum of 100 milliseconds will be reouted back to the tail of the queue of waiting jobs. Find the probability that an arriving job will be forced to wait for a second quantum. Also, find the probability that an arriving job will require a second quantum given that it has been served for 50 milliseconds already.\\
+$X=$ service time in milliseconds of the job (exponential random variable with parameter $\frac{1}{140}$)\\
+$P[$job waits for $2^{nd}$ quantum$]=P(x\geq 100)=e^{=\frac{100}{140}}$\\
+\[P(X\geq 100|X>50)=P(X\geq 50)=e^{-\frac{50}{140}}\]
+\item Assuming that $X$ and $Y$ are independent identical geometric random variables, prove that: \[p(X=i|X+Y=n)=\frac{1}{n-1} \text{ for } i=1,\dots,n-1\]
+\[p(X=i|X+Y=n)=\frac{P(X=i, X+Y=n)}{p(X+Y=n)}=\frac{p(X=i)p(Y=n-i)}{p(X+Y=n)}\]
+\[p(X=i)=p(1-p)^{i-1} \text{ for } i \geq 1\]
+\[p(Y=n-i)=p(1-p)^{n-i-1} \text{ for } n-i \geq 1\]
+\[p(X=i)p(Y=n-i)=p^2(1-p)^{n-2} \text{ if } i=1,\dots,n-1\]
+For any $i$ and $j$ in range $[1,n-1]$: \[p(X=i|X+Y=n)=p(X=j|X+Y=n)\]
+\[p(X=i|X+Y=n)=\frac{1}{n-1} \tab i=1,\dots,n-1\]
+\item Random variables $X$ and $Y$ have the joint PMF: 
+$P_{XY}(x,y)= 
+\begin{cases}
+c(x^2+y^2) & \text{if } x \in \{1,2,4\} \text{ and } y \in \{1,3\} \\
+0 & \text{otherwise}
+\end{cases}$
+	\begin{enumerate}[label=\alph*)]
+	\item What is the value of constant $c$?
+	\[\int_{-\infty}^{\infty}\int_{-\infty}^{\infty}f(x,y)dxdy=1\]
+	\[\int_{0}^{1}\int_{0}^{1}c(x^2 + y^2)dxdy=1\]
+	\[c\int_{0}^{1}\bigg(\frac{x^3}{3}+y^2x\bigg)_{0}^{1}dy=1\]
+	\[c\int_{0}^{1}\bigg(\frac{1}{3}+y^2\bigg)dy=1\]
+	\[c\bigg(\frac{1}{3}y+\frac{y^3}{3}\bigg)_{0}{1}=1\]
+	\[c=\frac{3}{2}\]
+	\item What is $P(Y<X)$?
+	\[P(\{2,1\})+P(\{4,1\})+P(\{4,3\})=\frac{5}{72}+\frac{17}{72}+\frac{25}{72}=\frac{47}{72}\]
+	\item What is $P(Y>X)$?
+	\[P(\{1,3\})+P(\{2,3\})=\frac{10}{72}+\frac{13}{72}=\frac{23}{72}\]
+	\item Find the marginal PMFs $p_X(x)$ and $p_Y(y)$
+	\[p_X(x)=\sum_{y=-\infty}p_{X,Y}(x,y)\]
+	$p_X(x)=\begin{cases}
+	\frac{12}{72} & x=1 \\
+	\frac{18}{72} & x=2 \\
+	\frac{42}{72} & x=4 \\
+	0 & \text{otherwise}
+	\end{cases}$
+	\[p_Y(y)=\sum_{x=-\infty}p_{X,Y}(x,y)\]
+	$p_Y(y)=\begin{cases}
+	\frac{24}{72} & y=1 \\
+	\frac{48}{72} & y=3 \\
+	0 & \text{otherwise}
+	\end{cases}$
+	\item Are variables $X$ and $Y$ independent?\\
+	No
+	\item Find $p(X=x|Y=3)$\\
+	$p(X=1|Y=3)+p(X=2|Y=3)+p(X=4|Y=3)$\\
+	$=\frac{p(Y=3|X=1)p(X=1)}{p(Y=3)} + \frac{p(Y=3|X=2)p(X=2)}{p(Y=3)} + \frac{p(Y=3|X=4)p(X=1)}{p(Y=4)}$\\
+	$=3\frac{\frac{1}{2}\frac{1}{3}}{\frac{1}{3}}$\\
+	$=\frac{3}{2}$
+	\end{enumerate}
+\item A lab network consisting of 20 computers was attacked by a computer virus. This virus enters each computer with probability 0.4, independently of other computers.
+	\begin{enumerate}[label=\alph*)]
+	\item Find the probability that the virus enters at least 10 computers.\\
+	$X=$ number of computers entered
+	\[P(X\geq10)=1-P(X\leq9)=1-0.7553=0.2447\]
+	\item A computer manager checks the lab computers, one after another, to see if they were infected by the virus. What is the probability that she has to test at least 6 computers to find the infected one?
+	\[P(Y\geq6)=\sum_{y=6}^{\infty}(0.6)^{y-1}(0.4)=\frac{(0.6)^5}{1-0.6}(0.4)=(0.6)^5=0.0778\]
+	\end{enumerate}
+\item You are developing a machine learning classifier to detect pedestrians from a camera fixed on a car. You came up with a powerful pedestrian recognition algorithm that when there is a pedestrian in front of the car it will be able to recognize them with 0.985\% accuracy
+	\begin{enumerate}[label=\alph*)]
+	\item When tested on the road, what is the probability that the first person it fails to recognize is the $10^{th}$ person?
+	\[p=1-0.985=0.015, q=1-p=0.985\]
+	\[p_X(10)=q^{10-1}p=(0.985)^{9}(0.015)=0.013\]
+	\item If the total number of pedestrians the algorithm will be tested with = 1000, what is the probability that it will be able to recognize more than 95\% of the test subjects?
+	\[1-\sum_{i=950}^{1000}{{1000}\choose{i}}p^iq^{1000-i}\]
+	\end{enumerate}
+\item A router has a buffer that is used to store packets arriving from a source. The arriving packets are later transmitted to a receiver. The system operated in time-slot pairs. In the first slot, the system stored a number of packets that are generated by the source according to a Poisson PMF with parameter $\lambda$, however, the maximum number of packets that can be stored is a given integer $b$, and packets arriving to a full buffer are discarded. In the second slot, the system transmits either all the stored packets or $c$ packets (whichever is less). Here, $c$ is a given integer with $0<c<b$. Assume that the buffer is initially empty at the beginning of the first slot.
+	\begin{enumerate}[label=\alph*)]
+	\item What is the probability that some packets will be discarded during the first slot?\\
+	\[\sum_{k=b_1}^{\infty}p_X(k)=1-\sum_{k=0}^{b}p_X(k)=1-\sum_{k=0}^{b}e^{-\lambda}\frac{\lambda^k}{k!}\]
+	\item What is the PMF of number of packets in the buffer at the end of the second slot?
+	$Y=$ number of packets stored at end of second slot\\
+	$p_Y(y)=\begin{cases}
+		\sum_{x=0}^{c}p_X(x)=\sum_{x=0}^ce^{-\lambda}\frac{\lambda^x}{x!} & y=0 \\
+		p_X(y+c)=e^{-\lambda}\frac{\lambda^{y+c}}{(y+c)!} & 0<y<b-c\\
+		p_X(b)=1-\sum_{x=0}^{b-1}e^{-\lambda}\frac{\lambda^x}{x!} & y=b-c \\
+		0 & \text{otherwise}
+	\end{cases}$
+	\end{enumerate}
+\item The work tasks arriving to 2 independent cores of a CPU follows the Poisson distribution. Let $X_1$ and $X_2$ be two random variables representing the number of work tasks arriving at core 1 and core 2, respectively. $X_1$ and $X_2$ are independent Poisson random variables where $X_i$ has a Poisson($\lambda_i$) distribution for $i=1,2$. Prove that the overall work on the CPU follows a Poisson distribution $\lambda_1+\lambda_2$\\
+Let $Y = X_1 + X_2$\\
+\begin{equation*}\begin{split}
+P(Y=y)=P(X_1+X_2) & =\sum_{x_1,x_2>0;x_1+x_2=y}P(X_1=x_1,X_2=x_2) \\
+&= \sum_{x_1,x_2>0;x_1+x_2=y}P(X_1=x_1)P(X_2=x_2) \\
+&= \sum_{x_1,x_2>0;x_1+x_2=y}\frac{e^{-\lambda_1}\lambda_1^{x_1}}{x_1!}\frac{e^{-\lambda_2}\lambda_2^{x_2}}{x_2!} \\
+&= e^{-(\lambda_1+\lambda_2)}\sum_{x_1,x_2>0;x_1+x_2=y}\frac{\lambda_1^{x_1}\lambda_2^{x_2}}{x_1!x_2!}\\
+&= \frac{e^{-(\lambda_1+\lambda_2)}}{y!}\sum_{x_1,x_2>0;x_1+x_2=y}{{y}\choose{x_2}}\lambda_1^{x_1}\lambda_2^{x_2} \\
+&= \frac{e^{-(\lambda_1 + \lambda_2)}(\lambda_1+\lambda_2)^y}{y!}
+\end{split}\end{equation*}
+\end{enumerate}
+
+
+\end{document}

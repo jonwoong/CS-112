@@ -1,0 +1,145 @@
+%%%%%%%%%% DOCUMENT STUFF %%%%%%%%%%
+
+\documentclass[10.5pt,letterpaper]{article}
+\usepackage{mathtools}
+\usepackage{amsmath}
+\usepackage{amssymb}
+\usepackage{datetime}
+\usepackage{setspace}
+\usepackage{tikz}
+\usepackage[margin=1in]{geometry}
+\usepackage{courier}
+\usepackage{listings}
+\usepackage{mips}
+\usepackage{graphicx}
+\usepackage{enumitem}
+\usepackage{pgfplots}
+
+%%%%%%%%%% FORMATTING %%%%%%%%%%
+
+\newdate{date}{29}{05}{2017}
+\spacing{1.5}
+\date{\displaydate{date}}
+\setcounter{secnumdepth}{0}
+\newcommand\tab[1][0.5cm]{\hspace*{#1}}
+\newcommand*\circled[1]{\tikz[baseline=(char.base)]{
+            \node[shape=circle,draw,inner sep=2pt] (char) {#1};}}
+\lstset{language=[mips]Assembler}
+\usetikzlibrary{arrows,shapes,automata,petri,positioning,calc}
+
+\tikzset{
+    place/.style={
+        circle,
+        thick,
+        draw=black,
+        fill=gray!50,
+        minimum size=6mm,
+    },
+        state/.style={
+        circle,
+        thick,
+        draw=blue!75,
+        fill=blue!20,
+        minimum size=6mm,
+    },
+}
+
+\graphicspath{{images/}}
+
+%%%%%%%%%% CONTENT %%%%%%%%%%
+
+%%%%% COVER PAGE %%%%%
+
+\begin{document}
+\title{CS 112: Homework 6}
+\author{
+	Jonathan Woong\\
+	804205763\\
+	Spring 2017\\
+	Discussion 1A}
+\maketitle
+\pagebreak
+
+%%%%% CONTINUOUS RANDOM VARIABLES %%%%%
+
+\section{Continuous Random Variables}
+\begin{enumerate}[label=\textbf{Problem \arabic*.}]
+\item Consider a birth-death system in which $\lambda_k=\lambda$ and $\mu_k=k\mu$ for $k \geq 0$. For all $k$, find the difference equations for $P_k(t)=P[k$ in system at time $t$].\\
+Let $T_B = $ time until next birth (exponentially distributed with parameter $\lambda$).\\
+Let $T_D = $ time until next death (exponentially distributed with parameter $\mu$).\\
+Let $T_w = $time spent in state 2 $= min\{T_B,T_D\} = $exponential with parameter $\lambda + \mu$. The mean is $\boxed{1/(\lambda + \mu)}$. 
+\item Consider a taxi station where taxis and customers arrive in a poisson process with respective rates of one and two per minute. A taxi will wait no matter how many taxis are waiting. But if an arriving customer does not find a taxi he leaves. Find the proportion of arriving customers that get taxis.\\
+Let the state be the number of taxis waiting. The birth-death process has $\lambda=1$ and $\mu=2$.
+\[p_1 = \frac{\lambda}{\mu}p_0, p_2=\frac{\lambda}{\mu}p_1,\dots,p_{k+1}=\frac{\lambda}{\mu}p_k\]
+\[\sum_{k=0}^{\infty}p_k=1\]
+\[\boxed{p_0=\frac{1}{2} \rightarrow 1-p_0=\frac{1}{2}\text{ customers get taxis}}\]
+\item Packets arrive at the router at a Poisson rate of three per millisecond. The time needed to check the routing table and forward one packet follows an exponential distribution with mean 0.2 millisecond. Assuming that the router has an infinite size of buffer, what is the fraction of time that the buffer is empty?\\
+Let the state be the number of packets int he buffer: $\lambda=3,\mu=5$.
+\[p_1=\frac{\lambda}{\mu}p_0,\dots,p_{k+1}=\frac{\lambda}{\mu}p_k\]
+\[\sum_{k=0}^{\infty}p_k=1\]
+\[p_0 = \frac{2}{5}\]
+The fraction of time the buffer is empty is \boxed{40\%}.
+\item Two machines produce products. Each machine produces in a rate of $n$ prodcuts per hour. The lifetime of a machine follows an exponential distribution with mean $1/x$ hours, and the time needed by a repairer to fix a machine follows an exponential distribution with mean of $1/y$ hours. What is the expected long-term producing rate for the two machines as a whole system.\\
+Let state $= $ number of working machines.
+\[\lambda_0=\lambda_1=y\]
+\[\mu_1=x, \mu_2=2x\]
+\[p_1=\frac{y}{x}p_0, p_2=\frac{y}{2x}p_1\]
+\[p_0+p_1+p_2=1\]
+\[p_0=\frac{2x^2}{2x^2+2xy+y^2}\]
+\[\boxed{p_0\times0 + p_1\times n + p_2 \times 2n}\]
+\item A network router has a buffer capacity for at most two packets. Packets that arrive when the buffer is full, leave without being served. Potential packets arrive at a Poisson rate of three per millisecond, and the successive service times are independent exponential random variables with mean 0.25 millisecond. What is:
+	\begin{enumerate}[label=(\alph*)]
+	\item The average number of packets in the buffer?
+	\[\lambda=3,\mu=4\]
+	Average number of packets in buffer $E[k]=\sum_{k=0}^{\infty}k\pi_k$
+	\[\pi_1=\frac{\lambda}{\mu}\pi_0, \pi_2=\frac{\lambda}{\mu}\pi_1\]
+	\[\boxed{\pi_0=\frac{16}{37}}\]
+	\item  The proportion of arriving packets that actually get served?
+	\[\boxed{\pi_0+\pi_1 = \frac{16}{37}+\frac{12}{37}}\]
+	\item If the router could work twice as fast what fraction of arriving packets would actually get served?
+	\[\boxed{\mu=8,\pi_0=\frac{64}{97},\pi_1=\frac{24}{97},\pi_2={9}{97}}\]
+	\item  If another router was installed(so now there are two servers) that serves packets at the same rate how many packets would be served?\\
+	Buffer capacity = 4\\
+	Service rate $= 2\mu = 8$ when buffer has at least 2 packets.
+	State 1 to state 0: rate = $\mu$
+	\[3\pi_0 = 4\pi_1\]
+	\[3\pi_1 = 8\pi_2\]
+	\[3\pi_2 = 8\pi_3\]
+	\[3\pi_3 = 8\pi_4\]
+	\[\pi_1 + \pi_2 + \pi_3 + \pi_4 = 1\]
+	\[\pi_4 = \frac{81}{4457}\]
+	\[\boxed{1-\pi_4 = \frac{4376}{4457}}\]
+	\end{enumerate}
+\item Figure 1 is the flowchart of a program. The mean execution time of each program segment is demoted by $\tau_i$. We cant to determine the mean execution time of the program. We assume that when the program terminates, it is immediately rerun, forever. Then this corresponds to a semi-Markov chain where each state is a program segment.
+	\begin{enumerate}[label=(\alph*)]
+	\item Draw the semi-markov chain.
+	\begin{center}\includegraphics{images/hw6-6.png}\end{center}
+	\item Describe in detail the procedure that you would follow to determine the percentage of time spent in segment $i$.\\
+	Let $\tau_i = $ mean execution time of segment $i$.\\
+	Let $\pi_i = $ visit ratio.\\
+	Fraction of time spent in segment $i = \boxed{\frac{\pi_i\tau_i}{\sum\pi_i\tau_i}}$
+	\item What is the mean execution time of the program?
+	\[\boxed{\sum n_i\tau_i}\]
+	\end{enumerate}
+\item Consider a sequential-service system consisting  of two servers, A and B. Arriving tasks will enter this system only if server A is free. If a task does enter, it is immediately
+processed by server A. When service by A is completed it goes to server B if B is free, or if B is busy, the task is aborted and disregarded. Upon completion of service at server B, the
+task is finished. Assuming that the Poisson arrival rate is two tasks per second and that A and B process tasks at a rate of 4 per second and 2 per second respectively,
+	\begin{enumerate}[label=(\alph*)]
+	\item What proportion of tasks enter the system?
+	\[2\pi_1 = 2\pi_3\]
+	\[4\pi_2 = 2\pi_0 + 2\pi_4\]
+	\[4\pi_3 = 4\pi_2 + 4\pi_4\]
+	\[6\pi_4 = 2\pi_3\]
+	\[\pi_1+\pi_2+\pi_3+\pi_4=1\]
+	\[\boxed{\pi_1+\pi_3 \frac{2}{3}}\]
+	\item What proportion of entering tasks receive service from B?
+	\[\frac{\pi_1\times1 + \pi_3\times\frac{2}{4+2}}{\pi_1+\pi_3} = \frac{1}{2} + \frac{1}{2}\frac{1}{3 = \boxed{\frac{2}{3}}}\]
+	\item What is the average number of tasks in the system?
+	\[\boxed{\pi_2+\pi_3+2\pi_4 = \frac{7}{9}}\]
+	\item What is the average amount of time an entering task is processed in the system?\\
+	Effective arrival rate $= \lambda(\pi_1+\pi_3)$
+	\[T = \frac{\frac{7}{9}}{\frac{4}{3}}=\frac{7}{12}\]
+	\[\frac{\pi_1\times\bigg(\frac{1}{\mu_A}+\frac{1}{\mu_B}\bigg) + \pi_3 \times \bigg(\frac{1}{\mu_A}+\frac{1}{\mu_B}\times\frac{2}{2+4}\bigg)}{\pi_1+\pi_3} = \frac{1}{2}\bigg(\frac{1}{4} + \frac{1}{2}\bigg) + \frac{1}{2}\bigg(\frac{1}{4} + \frac{2}{6}\frac{1}{2}\bigg)=\boxed{\frac{7}{12}}\]
+	\end{enumerate}
+\end{enumerate}
+\end{document}
